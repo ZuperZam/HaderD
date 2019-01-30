@@ -78,3 +78,6 @@ theta1 = lin1.coef_
 
 print(theta0)
 print(theta1)
+
+R2 = lin1.score(Xsample, ysample)
+print(R2)
