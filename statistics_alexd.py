@@ -50,9 +50,29 @@ def AutoCovarianceMatrix(Xi, N, k, Xs):
     return (1/(N-1))*autoCov
 
 print("Autovariance:", AutoCovarianceMatrix(Xi, N, k, Xs))
+print("Autovariance test:", np.cov(Xi))
 
 
 #////////////////////////////////////////////#
 #/////////////////Statistics Qc//////////////#
 #////////////////////////////////////////////#
 
+from scipy.stats import pearsonr
+import numpy as np
+
+x = np.array([23, 12, 45, 67, 90])
+y = np.array([14, 32, 76, 89, 29])
+
+print(np.sum(x))
+print(np.sum(y))
+
+def PearsonR(x, y):
+    pearsonR = (np.cov(x, y))/(MeanAndVariance(x)*MeanAndVariance(y))
+    return pearsonR
+
+print(PearsonR(x, y))
+
+r, p = pearsonr(x, y)
+
+print("r", r)
+print("p", p)
