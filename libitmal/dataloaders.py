@@ -1,14 +1,12 @@
+########################### Moon
 def MOON_GetDataSet(n_samples):
     X,y = make_moons(n_samples= n_samples, noise = 0.05)
     return X,y
 
 def MOON_Plot(X, y):
-     plt.scatter(X[:,0], X[:,1], s=40, c=y)
-        
+     plt.scatter(X[:,0], X[:,1], s=40, c=y)      
 
-        
-        
-        
+########################### MNIST
 def fetch_mnist(data_home=None):
     mnist_alternative_url = "https://github.com/amplab/datascience-sp14/raw/master/lab7/mldata/mnist-original.mat"
     data_home = get_data_home(data_home=data_home)
@@ -33,10 +31,7 @@ def MNIST_PlotDigit(data):
     plt.axis("off")
     plt.show
 
-    
-    
-    
-
+########################### Iris
 def IRIS_GetDataSet():
     data = load_iris()
     return(data["data"], data["target"])
