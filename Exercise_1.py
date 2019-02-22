@@ -203,14 +203,7 @@ for i in range(4):
     print()
 
 def MAE(x, y):
-    temp = 0
-    temp2 = 0
-    for i in range(x.size):
-        temp2 = x[i] + y[i]
-        if temp2 < 0:
-            temp2 *= -1
-        temp += temp2
-    return (1/x.size)*temp
+    return (np.sum(np.absolute(x-y)))/x.size
 
 r=MAE(h(X), y)
 expected=3.75
