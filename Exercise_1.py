@@ -208,4 +208,87 @@ def MAE(x, y):
 r=MAE(h(X), y)
 expected=3.75
 print("MAE=",r,", diff=",r-expected)
-assert r-expected<eps, "MAE dist seems to be wrong" 
+assert r-expected<eps, "MAE dist seems to be wrong"
+
+#////////////////////////////////////////////#
+#/////////////////Lesson02Qe/////////////////#
+#////////////////////////////////////////////#
+
+for i in range(4):
+    if i == 2:
+        print("#########################\nEXERCISE LESSON02 Qe\n#########################")
+    print()
+    
+def RMSE_RC(x, y):
+    assert x.shape[0]>=0
+    if not x.ndim==1:
+        raise ValueError('Something very bad happened!')
+    else:
+        temp = 0
+        for i in range(x.size):
+            temp += (x[i] - y[i])**2
+        return np.sqrt((1/x.size)*temp)
+    
+eps=1E-9
+r=RMSE_RC(h(X),y)
+expected=6.57647321898295
+print("RMSE=",r,", diff=",r-expected)
+assert r-expected<eps, "your RMSE dist seems to be wrong" 
+
+for i in range(2):
+    print()
+    
+def MAE_RC(x, y):
+    assert x.shape[0]>=0
+    if not x.ndim==1:
+        raise ValueError('Something very bad happened!')
+    else:
+        return (np.sum(np.absolute(x-y)))/x.size
+    
+r=MAE_RC(h(X), y)
+expected=3.75
+print("MAE=",r,", diff=",r-expected)
+assert r-expected<eps, "MAE dist seems to be wrong"
+
+for i in range(2):
+    print()
+
+def L1_RC(matrix):
+    assert matrix.shape[0]>=0 and matrix[0].shape[0]>=0
+    if not matrix.ndim==2:
+        raise ValueError('Something very bad happened!')
+    else:
+        temp = 0
+        temp2 = 0
+        for i in range(len(matrix)):
+            for x in range(len(matrix[0])):
+                temp2 = matrix[i][x]
+                if temp2 < 0:
+                    temp2 *= -1
+                temp += temp2
+        return temp
+
+def L2_RC(matrix):
+    assert matrix.shape[0]>=0 and matrix[0].shape[0]>=0
+    if not matrix.ndim==2:
+        raise ValueError('Something very bad happened!')
+    else:
+        temp = 0
+        for i in range(len(matrix)):
+            for x in range(len(matrix[0])):
+                temp += (matrix[i][x])**2
+        return np.sqrt(temp)
+
+d1_RC=L1_RC(tx-ty)
+d2_RC=L2_RC(tx-ty)
+
+print("L1 =", d1_RC)
+print("L2 =", d2_RC)
+
+print("tx-ty=",tx-ty,", d1-expected_d1=",d1_RC-expected_d1,", d2-expected_d1=",d2_RC-expected_d2)
+
+eps=1E-9
+assert np.fabs(d1_RC-expected_d1)<eps, "L1 dist seems to be wrong" 
+assert np.fabs(d2_RC-expected_d2)<eps, "L2 dist seems to be wrong" 
+    
+print("Test with linalg.norm =", np.linalg.norm(tx-ty))
