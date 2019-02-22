@@ -66,12 +66,6 @@ import sys
     
 X, y = MNIST_GetDataSet()
 
-if X.ndim==3:
-    print("reshaping X..")
-    assert y.ndim==1
-    X = X.reshape((X.shape[0],X.shape[1]*X.shape[2]))
-assert X.ndim==2
-
 some_digit = X[36000]
 
 X_train, X_test, y_train, y_test = X[:60000], X[60000:], y[:60000], y[60000:]
@@ -89,19 +83,33 @@ sgd_clf.fit(X_train, y_train_5)
 
 false_list = np.array([])
 true_list = np.array([])
-false_list.resize((X.size,1))
-true_list.resize((X.size,1))
+false_list.resize((len(X),1))
+true_list.resize((len(X),1))
+
+fuck = 0
+fuck2 = 0
 
 for i in range(len(y)):
     re = X[i]
     temp = sgd_clf.predict([re])
-    true_list[i] = temp
-#    if temp:
-#        true_list[i] = temp
-#    else:
-#        false_list[i] = temp
+#    true_list[i] = temp
+    if temp:
+        fuck += 1
+        true_list[i] = True
+        false_list[i] = False
+    else:
+        fuck2 += 1
+        false_list[i] = True
+        true_list[i] = False
         
+print("fuck= ", fuck)
+print("fuck2= ", fuck2)
+plt.subplot(2,1,1)
 plt.plot(true_list)
+#plt.show
+
+plt.subplot(2,1,2)
+plt.plot(false_list)
 plt.show
 
 #sgd_clf.predict([some_digit])
@@ -138,5 +146,5 @@ plt.show
 #plt.plot(cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy"))
 #plt.show
 
-#print(cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy"))
+print(cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy"))
 
