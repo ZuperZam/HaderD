@@ -22,21 +22,27 @@ def fetch_mnist(data_home=None):
             copyfileobj(mnist_url, matlab_file)
 from sklearn.datasets import fetch_mldata
 
+def MNIST_GetDataSet():
+    fetch_mnist()
+    mnist = fetch_mldata('MNIST original')
+    return(mnist["data"], mnist["target"])
+
 def MNIST_PlotDigit(data):
     image = data.reshape(28, 28)
     plt.imshow(image)
     plt.axis("off")
     plt.show
 
-def MNIST_GetDataSet():
-    fetch_mnist()
-    mnist = fetch_mldata('MNIST original')
-    return(mnist["data"], mnist["target"])
-
-
-
+    
+    
+    
 
 def IRIS_GetDataSet():
-    fetch_mnist()
-    mnist = sklearn.datasets.load_iris()
-    return(mnist["data"], mnist["target"])
+    data = load_iris()
+    return(data["data"], data["target"])
+
+def IRIS_Plot(X, y):
+    plt.title('Iris Data (purple=setona, teal=versicolor, yellow=virginica')
+    plt.xlabel('Sepal length')
+    plt.ylabel('Sepal width')
+    plt.scatter(X[:, 0], X[:, 1], c=y)
