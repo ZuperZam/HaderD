@@ -56,14 +56,15 @@ def IRIS_Plot(X, y):
 ######################REEEEEEEEEEEEEEEEEEEEEE############
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import StratifiedKFold
-from io import StringIO
+from sklearn.model_selection import cross_val_predict
+from sklearn.base import BaseEstimator
+from sklearn.metrics import confusion_matrix
 #import warnings
-from sklearn.base import clone
 import numpy as np
-import sys
 #warnings.filterwarnings("ignore")
     
+##################Qa
+
 X, y = MNIST_GetDataSet()
 
 some_digit = X[36000]
@@ -75,76 +76,62 @@ X_train, y_train = X_train[shuffle_index], y_train[shuffle_index]
 y_train_5 = (y_train == 5)
 y_test_5 = (y_test == 5)
 
-#old_stdout = sys.stdout
-#sys.stdout = mystdout = StringIO()
-
 sgd_clf = SGDClassifier(random_state=42, max_iter=1000, tol=1e-3)
 sgd_clf.fit(X_train, y_train_5)
 
-false_list = np.array([])
 true_list = np.array([])
-false_list.resize((len(X),1))
-true_list.resize((len(X),1))
+true_list.resize((len(X_train),1))
 
-fuck = 0
-fuck2 = 0
+true = 0
+false = 0
 
-for i in range(len(y)):
-    re = X[i]
+for i in range(len(y_train)):
+    re = X_train[i]
     temp = sgd_clf.predict([re])
-#    true_list[i] = temp
     if temp:
-        fuck += 1
-        true_list[i] = True
-        false_list[i] = False
+        true += 1
+        true_list[i] = 1
     else:
-        fuck2 += 1
-        false_list[i] = True
-        true_list[i] = False
-        
-print("fuck= ", fuck)
-print("fuck2= ", fuck2)
+        false += 1
+        true_list[i] = 0
+
+print("SDG_true = ", true)
+print("SDG_false = ", false)
+
 plt.subplot(2,1,1)
 plt.plot(true_list)
-#plt.show
-
-plt.subplot(2,1,2)
-plt.plot(false_list)
 plt.show
 
-#sgd_clf.predict([some_digit])
+print("Predict sgd = ", cross_val_predict(sgd_clf, X_train, y_train_5, cv=3))
+print("Score sgd = ", cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy"))
 
-#sys.stdout = old_stdout
-#loss_history = mystdout.getvalue()
-#
-#loss_list = []
-#
-#for line in loss_history.split('\n'):
-#    if(len(line.split("loss: ")) == 1):
-#        continue
-#    loss_list.append(float(line.split("loss: ")[-1]))
-#    
-#    plt.figure()
-#plt.plot(np.arange(len(loss_list)), loss_list)
-#plt.xlabel("Time in epochs"); plt.ylabel("Loss")
-#plt.show()
+##############Qb
 
-#skfolds = StratifiedKFold(n_splits=3, random_state=42)
-#for train_index, test_index in skfolds.split(X_train, y_train_5):
-#    clone_clf = clone(sgd_clf)
-#    X_train_folds = X_train[train_index]
-#    y_train_folds = (y_train_5[train_index])
-#    X_test_fold = X_train[test_index]
-#    y_test_fold = (y_train_5[test_index])
-#    clone_clf.fit(X_train_folds, y_train_folds)
-#    y_pred = clone_clf.predict(X_test_fold)
-#    n_correct = sum(y_pred == y_test_fold)
-#    print(n_correct / len(y_pred)) # prints 0.9502, 0.96565 and 0.96495
+for i in range(2):
+    print()
 
+class DummyClassifier(BaseEstimator):
+    def fit(self, X, y=None):
+        pass
+    def predict(self, X):
+        return np.zeros((len(X), 1), dtype=bool)
 
+dummy_clf = DummyClassifier()
+dummy_clf.fit(X_train, y_train_5)
+print("Predict dummy = ", cross_val_predict(dummy_clf, X_train, y_train_5, cv=3))
+print("Score dummy = ", cross_val_score(dummy_clf, X_train, y_train_5, cv=3, scoring="accuracy"))
 
-#plt.plot(cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy"))
-#plt.show
+true_dummy = 0
+false_dummy = 0
 
-print(cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy"))
+for i in range(len(y_train)):
+    if y_train[i] == 5:
+        true_dummy += 1
+    else:
+        false_dummy += 1
 
+print("y_train_5.shape = ", y_train_5.shape[0])
+print("dummy_true = ", true_dummy)
+print("dummy_false = ", false_dummy)
+
+print(confusion_matrix(y_train_5, cross_val_predict(dummy_clf, X_train, y_train_5, cv=3)))
