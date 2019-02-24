@@ -59,9 +59,9 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import cross_val_predict
 from sklearn.base import BaseEstimator
 from sklearn.metrics import confusion_matrix
-#import warnings
+import warnings
 import numpy as np
-#warnings.filterwarnings("ignore")
+warnings.filterwarnings("ignore")
     
 ##################Qa
 
@@ -80,13 +80,13 @@ sgd_clf = SGDClassifier(random_state=42, max_iter=1000, tol=1e-3)
 sgd_clf.fit(X_train, y_train_5)
 
 true_list = np.array([])
-true_list.resize((len(X_train),1))
+true_list.resize((len(X_test),1))
 
 true = 0
 false = 0
 
-for i in range(len(y_train)):
-    re = X_train[i]
+for i in range(len(y_test)):
+    re = X_test[i]
     temp = sgd_clf.predict([re])
     if temp:
         true += 1
@@ -102,8 +102,13 @@ plt.subplot(2,1,1)
 plt.plot(true_list)
 plt.show
 
-print("Predict sgd = ", cross_val_predict(sgd_clf, X_train, y_train_5, cv=3))
-print("Score sgd = ", cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy"))
+sgd_predict = cross_val_predict(sgd_clf, X_test, y_test_5, cv=3)
+sgd_score = cross_val_score(sgd_clf, X_test, y_test_5, cv=3, scoring="accuracy")
+
+print("Predict sgd = ", sgd_predict)
+print("Score sgd = ", sgd_score)
+
+print(confusion_matrix(y_test_5, sgd_predict))
 
 ##############Qb
 
@@ -118,20 +123,22 @@ class DummyClassifier(BaseEstimator):
 
 dummy_clf = DummyClassifier()
 dummy_clf.fit(X_train, y_train_5)
-print("Predict dummy = ", cross_val_predict(dummy_clf, X_train, y_train_5, cv=3))
-print("Score dummy = ", cross_val_score(dummy_clf, X_train, y_train_5, cv=3, scoring="accuracy"))
+dummy_predict = cross_val_predict(dummy_clf, X_test, y_test_5, cv=3)
+dummy_score = cross_val_score(dummy_clf, X_test, y_test_5, cv=3, scoring="accuracy")
+print("Predict dummy = ", dummy_predict)
+print("Score dummy = ", dummy_score)
 
 true_dummy = 0
 false_dummy = 0
 
-for i in range(len(y_train)):
-    if y_train[i] == 5:
+for i in range(len(y_test)):
+    if y_test[i] == 5:
         true_dummy += 1
     else:
         false_dummy += 1
 
-print("y_train_5.shape = ", y_train_5.shape[0])
+print("y_train_5.shape = ", y_test_5.shape[0])
 print("dummy_true = ", true_dummy)
 print("dummy_false = ", false_dummy)
 
-print(confusion_matrix(y_train_5, cross_val_predict(dummy_clf, X_train, y_train_5, cv=3)))
+print(confusion_matrix(y_test_5, dummy_predict))
