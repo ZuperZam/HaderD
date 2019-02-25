@@ -91,18 +91,19 @@ false_list = np.array([])
 true_list = np.array([])
 false_list.resize((X.size,1))
 true_list.resize((X.size,1))
+print(X.size)
 
-for i in range(len(y)):
-    re = X[i]
-    temp = sgd_clf.predict([re])
-    true_list[i] = temp
-#    if temp:
-#        true_list[i] = temp
-#    else:
-#        false_list[i] = temp
-        
-plt.plot(true_list)
-plt.show
+#for i in range(len(y)):
+#    re = X[i]
+#    temp = sgd_clf.predict([re])
+#    true_list[i] = temp
+##    if temp:
+##        true_list[i] = temp
+##    else:
+##        false_list[i] = temp
+#        
+#plt.plot(true_list)
+#plt.show
 
 #sgd_clf.predict([some_digit])
 

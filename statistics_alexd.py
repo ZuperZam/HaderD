@@ -50,7 +50,7 @@ def AutoCovarianceMatrix(Xi, N, k, Xs):
     return (1/(N-1))*autoCov
 
 print("Autovariance:", AutoCovarianceMatrix(Xi, N, k, Xs))
-print("Autovariance test:", np.cov(Xi))
+print("Autovariance test:", np.cov(Xi, None, True))
 
 
 #////////////////////////////////////////////#
