@@ -107,21 +107,30 @@ import os
 
 
 ################################# Qe
-#from sklearn.datasets import load_iris
-#import seaborn as sns
-#
-#def IRIS_GetDataSet():
-#    data = load_iris()
-#    return(data["data"], data["target"])
-#    
-#def IRIS_PlotPair(X, y):
-#    sns.set(style="ticks")
-#    df = sns.load_dataset("iris")
-#    sns.pairplot(df, hue="species")
-#
-## TEST CODE:
-#X, y = IRIS_GetDataSet()
-#IRIS_PlotPair(X, y)
+from sklearn.datasets import load_iris
+import seaborn as sns
+
+def IRIS_GetDataSet():
+    data = load_iris()
+    return(data["data"], data["target"])
+    
+def IRIS_PlotPair():
+    sns.set(style="ticks")
+    df = sns.load_dataset("iris")
+    sns.pairplot(df, hue="species")
+
+# TEST CODE:
+X, y = IRIS_GetDataSet()
+IRIS_PlotPair()
 
 
 ################################# Qg
+#import pandas as pd
+#import seaborn as sns
+#
+#df = pd.read_csv("datasets/heart-disease-uci/heart.csv",sep=",")
+#
+#plt.figure(figsize=(15,6))
+#sns.countplot(x='age',data = df, hue = 'fbs',palette='GnBu')
+#plt.show()
+#        

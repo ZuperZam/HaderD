@@ -56,21 +56,16 @@ def IRIS_Plot(X, y):
 ######################REEEEEEEEEEEEEEEEEEEEEE############
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import StratifiedKFold
-from io import StringIO
-#import warnings
-from sklearn.base import clone
+from sklearn.model_selection import cross_val_predict
+from sklearn.base import BaseEstimator
+from sklearn.metrics import confusion_matrix
+import warnings
 import numpy as np
-import sys
-#warnings.filterwarnings("ignore")
+warnings.filterwarnings("ignore")
     
-X, y = MNIST_GetDataSet()
+##################Qa
 
-if X.ndim==3:
-    print("reshaping X..")
-    assert y.ndim==1
-    X = X.reshape((X.shape[0],X.shape[1]*X.shape[2]))
-assert X.ndim==2
+X, y = MNIST_GetDataSet()
 
 some_digit = X[36000]
 
@@ -81,63 +76,69 @@ X_train, y_train = X_train[shuffle_index], y_train[shuffle_index]
 y_train_5 = (y_train == 5)
 y_test_5 = (y_test == 5)
 
-#old_stdout = sys.stdout
-#sys.stdout = mystdout = StringIO()
-
 sgd_clf = SGDClassifier(random_state=42, max_iter=1000, tol=1e-3)
 sgd_clf.fit(X_train, y_train_5)
 
-false_list = np.array([])
 true_list = np.array([])
-false_list.resize((X.size,1))
-true_list.resize((X.size,1))
-print(X.size)
+true_list.resize((len(X_test),1))
 
-#for i in range(len(y)):
-#    re = X[i]
-#    temp = sgd_clf.predict([re])
-#    true_list[i] = temp
-##    if temp:
-##        true_list[i] = temp
-##    else:
-##        false_list[i] = temp
-#        
-#plt.plot(true_list)
-#plt.show
+true = 0
+false = 0
 
-#sgd_clf.predict([some_digit])
+for i in range(len(y_test)):
+    re = X_test[i]
+    temp = sgd_clf.predict([re])
+    if temp:
+        true += 1
+        true_list[i] = 1
+    else:
+        false += 1
+        true_list[i] = 0
 
-#sys.stdout = old_stdout
-#loss_history = mystdout.getvalue()
-#
-#loss_list = []
-#
-#for line in loss_history.split('\n'):
-#    if(len(line.split("loss: ")) == 1):
-#        continue
-#    loss_list.append(float(line.split("loss: ")[-1]))
-#    
-#    plt.figure()
-#plt.plot(np.arange(len(loss_list)), loss_list)
-#plt.xlabel("Time in epochs"); plt.ylabel("Loss")
-#plt.show()
+print("SDG_true = ", true)
+print("SDG_false = ", false)
 
-#skfolds = StratifiedKFold(n_splits=3, random_state=42)
-#for train_index, test_index in skfolds.split(X_train, y_train_5):
-#    clone_clf = clone(sgd_clf)
-#    X_train_folds = X_train[train_index]
-#    y_train_folds = (y_train_5[train_index])
-#    X_test_fold = X_train[test_index]
-#    y_test_fold = (y_train_5[test_index])
-#    clone_clf.fit(X_train_folds, y_train_folds)
-#    y_pred = clone_clf.predict(X_test_fold)
-#    n_correct = sum(y_pred == y_test_fold)
-#    print(n_correct / len(y_pred)) # prints 0.9502, 0.96565 and 0.96495
+plt.subplot(2,1,1)
+plt.plot(true_list)
+plt.show
 
+sgd_predict = cross_val_predict(sgd_clf, X_test, y_test_5, cv=3)
+sgd_score = cross_val_score(sgd_clf, X_test, y_test_5, cv=3, scoring="accuracy")
 
+print("Predict sgd = ", sgd_predict)
+print("Score sgd = ", sgd_score)
 
-#plt.plot(cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy"))
-#plt.show
+print(confusion_matrix(y_test_5, sgd_predict))
 
-#print(cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy"))
+##############Qb
 
+for i in range(2):
+    print()
+
+class DummyClassifier(BaseEstimator):
+    def fit(self, X, y=None):
+        pass
+    def predict(self, X):
+        return np.zeros((len(X), 1), dtype=bool)
+
+dummy_clf = DummyClassifier()
+dummy_clf.fit(X_train, y_train_5)
+dummy_predict = cross_val_predict(dummy_clf, X_test, y_test_5, cv=3)
+dummy_score = cross_val_score(dummy_clf, X_test, y_test_5, cv=3, scoring="accuracy")
+print("Predict dummy = ", dummy_predict)
+print("Score dummy = ", dummy_score)
+
+true_dummy = 0
+false_dummy = 0
+
+for i in range(len(y_test)):
+    if y_test[i] == 5:
+        true_dummy += 1
+    else:
+        false_dummy += 1
+
+print("y_train_5.shape = ", y_test_5.shape[0])
+print("dummy_true = ", true_dummy)
+print("dummy_false = ", false_dummy)
+
+print(confusion_matrix(y_test_5, dummy_predict))
