@@ -157,7 +157,7 @@ def AssertInRange(x,e,eps=1E-9,verbose=0):
         CheckFloat(eps)
         x0=e-eps
         x1=e+eps
-        ok=x>x0 and x<x1
+        ok=x>=x0 and x<=x1
         absdiff=fabs(x-e)
         if verbose>0:
             print("InRange(x=",x,",e=",e,",eps=",eps,") x in [",x0,";",x1,"]: ",ok)
