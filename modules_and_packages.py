@@ -6,11 +6,11 @@ Created on Tue Feb 12 12:49:54 2019
 """
 from libitmal import __init__
 from libitmal import utils as itmalutils
-from moduletest1 import moduletest1 as test
 
 itmalutils.TestAll()
 
 import sys,os
+from moduletest1 import moduletest1 as test
 sys.path.append(os.path.expanduser('~/itmal'))
 
 print(dir(itmalutils))
@@ -25,11 +25,25 @@ class MyClass:
     myvar = "blah"
     
     def __init__(self):
+        self.x = "Hello"
+
+    def pubFunction(self):
+        print("This is a public function")
+        
+    def __privFunction(self):
+        print("This is a private function")
         
     def myfun(self):
         print("This is a message inside the class.")
         self.myvar = "bleh"
         return self.myvar
+    
+    def __repr__(self):
+        return str(self.__dict__)
+
+a = 10
+##print("The number is" + a) ## THIS WILL NOT WORK
+print("The number is " + a.__repr__())
 
 myobjectx = MyClass()
 
@@ -49,4 +63,3 @@ print(myobjectx.myvar)
 # together form what is essentially a constructor in Python.
 
 # Destructors are not required since Python has garbage collection
-
