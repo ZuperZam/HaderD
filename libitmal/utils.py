@@ -158,9 +158,10 @@ def AssertInRange(x,e,eps=1E-9,verbose=0):
         x0=e-eps
         x1=e+eps
         ok=x>x0 and x<x1
+        absdiff=fabs(x-e)
         if verbose>0:
             print("InRange(x=",x,",e=",e,",eps=",eps,") x in [",x0,";",x1,"]: ",ok)
-        assert ok ,"x="+str(x)+" is not within the range ["+str(x0)+";"+str(x1)+"] for eps="+str(eps)
+        assert ok ,"x="+str(x)+" is not within the range ["+str(x0)+";"+str(x1)+"] for eps="+str(eps)+", got eps="+str(absdiff)
 
 def InRange(x,e,eps=1E-9,verbose=0):
     try:
@@ -201,6 +202,8 @@ def PrintMatrix(X, label="", precision=2, threshold=100, edgeitems=1, linewidth=
 
     #(m,n)=X.shape
     #buf = StringIO.StringIO()
+    if threshold<=0:
+    		threshold = X.size+1
     with printoptions(precision=precision, threshold=threshold, edgeitems=edgeitems, linewidth=linewidth, suppress=suppress):
         #print >> buf (X)
         t=str(X).replace("\n","\n"+s)

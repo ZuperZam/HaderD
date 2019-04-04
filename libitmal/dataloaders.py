@@ -59,12 +59,14 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import cross_val_predict
 from sklearn.base import BaseEstimator
 from sklearn.metrics import confusion_matrix
-import warnings
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
 import numpy as np
+import random as rnd
+import warnings
 warnings.filterwarnings("ignore")
     
 ##################Qa
-
 X, y = MNIST_GetDataSet()
 
 some_digit = X[36000]
@@ -98,9 +100,9 @@ for i in range(len(y_test)):
 print("SDG_true = ", true)
 print("SDG_false = ", false)
 
-plt.subplot(2,1,1)
-plt.plot(true_list)
-plt.show
+#plt.subplot(2,1,1)
+#plt.plot(true_list)
+#plt.show
 
 sgd_predict = cross_val_predict(sgd_clf, X_test, y_test_5, cv=3)
 sgd_score = cross_val_score(sgd_clf, X_test, y_test_5, cv=3, scoring="accuracy")
@@ -108,10 +110,9 @@ sgd_score = cross_val_score(sgd_clf, X_test, y_test_5, cv=3, scoring="accuracy")
 print("Predict sgd = ", sgd_predict)
 print("Score sgd = ", sgd_score)
 
-print(confusion_matrix(y_test_5, sgd_predict))
+print("SGD_Confusion_Matrix = ",confusion_matrix(y_test_5, sgd_predict))
 
 ##############Qb
-
 for i in range(2):
     print()
 
@@ -137,8 +138,82 @@ for i in range(len(y_test)):
     else:
         false_dummy += 1
 
-print("y_train_5.shape = ", y_test_5.shape[0])
+print("y_test_5.shape = ", y_test_5.shape[0])
 print("dummy_true = ", true_dummy)
 print("dummy_false = ", false_dummy)
 
-print(confusion_matrix(y_test_5, dummy_predict))
+print("Dummy_Confusion_Matrix = ",confusion_matrix(y_test_5, dummy_predict))
+
+##################################Lecture03
+########################Qa
+for i in range(2):
+    print()
+
+def MyAccuracy(y_pred, y_true):
+    temp = confusion_matrix(y_true, y_pred)
+    return ((temp[1][1] + temp [0][0])/((temp[0][1] + temp[1][0])+(temp[1][1] + temp[0][0])))*100
+
+print("MyAccuracy_Dummy = ", MyAccuracy(dummy_predict, y_test_5))
+print("MyAccuracy_SGD = ", MyAccuracy(sgd_predict, y_test_5))
+
+########################Qb
+for i in range(2):
+    print()
+    
+def MyPrecision(y_pred, y_true):
+    temp = confusion_matrix(y_true, y_pred)
+    return (temp[1][1]/(temp[1][1] + temp[0][1]))
+
+def MyRecall(y_pred, y_true):
+    temp = confusion_matrix(y_true, y_pred)
+    return (temp[1][1]/(temp[1][1] + temp[1][0]))
+    
+def MyF1Score(y_pred, y_true):
+    return 2*(((MyPrecision(y_pred, y_true)*MyRecall(y_pred, y_true))/((MyPrecision(y_pred, y_true)+MyRecall(y_pred, y_true)))))
+
+print("MyPrecision_Dummy = ",MyPrecision(dummy_predict, y_test_5))
+print("MyPrecision_SGD = ",MyPrecision(sgd_predict, y_test_5))
+print("MyRecall_Dummy = ",MyRecall(dummy_predict, y_test_5))
+print("MyRecall_SGD = ",MyRecall(sgd_predict, y_test_5))
+print("MyF1Score_Dummy = ",MyF1Score(dummy_predict, y_test_5))
+print("MyF1Score_SGD = ",MyF1Score(sgd_predict, y_test_5))
+
+########################Qc
+for i in range(2):
+    print()
+    
+print("SGD_Confusion_Matrix = ",confusion_matrix(y_test_5, sgd_predict))
+
+########################Qd
+#for i in range(2):
+#    print()
+
+#scaler = StandardScaler()
+#X_train_scaled = scaler.fit_transform(X_train.astype(np.float64))
+#y_train_predict = cross_val_predict(sgd_clf, X_train_scaled, y_train, cv=3)
+#conf_mx = confusion_matrix(y_train, y_train_predict)
+#row_sums = conf_mx.sum(axis=1, keepdims=True)
+#norm_conf_mx = conf_mx / row_sums
+#np.fill_diagonal(norm_conf_mx, 0)
+#plt.matshow(norm_conf_mx, cmap=plt.cm.gray)
+#plt.show
+
+########################Qd
+#for i in range(2):
+#    print()
+#
+#y_train_large = (y_train >= 7)
+#y_train_odd = (y_train % 2 == 1)
+#y_multilabel = np.c_[y_train_large, y_train_odd]
+#knn_clf = KNeighborsClassifier()
+#knn_clf.fit(X_train, y_multilabel)
+#y_train_knn_pred = cross_val_predict(knn_clf, X_train, y_train, cv=3)
+#noise = rnd.randint(0, 100, (len(X_train), 784))
+#noise = rnd.randint(0, 100, (len(X_test), 784))
+#X_train_mod = X_train + noise
+#X_test_mod = X_test + noise
+#y_train_mod = X_train
+#y_test_mod = X_test
+#knn_clf.fit(X_train_mod, y_train_mod)
+#clean_digit = knn_clf.predict([X_test_mod[some_digit]])
+#MNIST_PlotDigit(clean_digit)
