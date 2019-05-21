@@ -1,3 +1,14 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Apr  2 17:35:57 2019
+
+@author: ZuperZam
+"""
+
+#from libitmal import kernelfuns as itmalkernelfuns
+#itmalkernelfuns.EnableGPU()                              
+#itmalkernelfuns.DisableGPU()   
+
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.optimizers import Adam, SGD
@@ -13,6 +24,11 @@ np.random.seed(42)
 
 # Build Keras model 
 model = Sequential()
+model.add(Dense(input_dim=2, units=8, activation="tanh", kernel_initializer="normal"))
+model.add(Dense(units=2, activation="softmax"))
+
+#optimizer = SGD(lr=0.1)
+optimizer = Adam(lr=0.1)
 model.add(Dense(input_dim=2, units=8, activation="softmax", kernel_initializer="normal"))
 #model.add(Dense(units=2, activation="softmax"))
 model.add(Dense(2, activation="relu"))
