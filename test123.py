@@ -48,28 +48,27 @@ test_images = test_images / 255.0
 #    plt.xlabel(class_names[train_labels[i]])
 #plt.show()
 
-#model = keras.Sequential([
-#    keras.layers.Flatten(input_shape=(28, 28)),
-#    keras.layers.Dense(64, activation=tf.nn.relu),
-#    keras.layers.Dense(25, activation=tf.nn.softmax),
-#    ])
+model = keras.Sequential([
+    keras.layers.Flatten(input_shape=(img_rows, img_cols, 1)),
+    keras.layers.Dense(64, activation=tf.nn.relu),
+    keras.layers.Dense(20, activation=tf.nn.softmax),
+    ])
 #                  loss='sparse_categorical_crossentropy',
 
-model = keras.Sequential()
-
-input_shape = (img_rows, img_cols, 1)
-model.add(keras.layers.Conv2D(32, kernel_size=(3, 3),
-                 activation='relu',
-                 input_shape=input_shape))
-model.add(keras.layers.MaxPooling2D(pool_size=(2, 2)))
-model.add(keras.layers.Dropout(0.25))
-model.add(keras.layers.Conv2D(64, (3, 3), activation='relu'))
-model.add(keras.layers.MaxPooling2D(pool_size=(2, 2)))
-model.add(keras.layers.Dropout(0.25))
-model.add(keras.layers.Flatten())
-model.add(keras.layers.Dense(250, activation='relu'))
-model.add(keras.layers.Dropout(0.5))
-model.add(keras.layers.Dense(10, activation='softmax'))
+#model = keras.Sequential()
+#input_shape = (img_rows, img_cols, 1)
+#model.add(keras.layers.Conv2D(32, kernel_size=(3, 3),
+#                 activation='relu',
+#                 input_shape=input_shape))
+#model.add(keras.layers.MaxPooling2D(pool_size=(2, 2)))
+#model.add(keras.layers.Dropout(0.25))
+#model.add(keras.layers.Conv2D(64, (3, 3), activation='relu'))
+#model.add(keras.layers.MaxPooling2D(pool_size=(2, 2)))
+#model.add(keras.layers.Dropout(0.25))
+#model.add(keras.layers.Flatten())
+#model.add(keras.layers.Dense(250, activation='relu'))
+#model.add(keras.layers.Dropout(0.5))
+#model.add(keras.layers.Dense(10, activation='softmax'))
 
 model.compile(optimizer='Nadam',
               loss='sparse_categorical_crossentropy',
