@@ -75,8 +75,8 @@ model.compile(optimizer='Nadam',
               metrics=['accuracy'])
 
 model.fit(train_images, train_labels,
-          batch_size=100,
-          epochs=10,
+          batch_size=50,
+          epochs=5,
           verbose=1,
           validation_data=(test_images, test_labels))
 
