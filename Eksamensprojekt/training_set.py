@@ -27,7 +27,7 @@ y = []
 y_guess = []
 image_size = 500
 
-POSITIVE_IMAGES_PATH = './shrek'
+POSITIVE_IMAGES_PATH = './puppy'
 NEGATIVE_IMAGES_PATH = './not_shrek_v2'
 POSITIVE_GUESS_IMAGES_PATH = './guess_positive_test'
 NEGATIVE_GUESS_IMAGES_PATH = './guess_negative'
