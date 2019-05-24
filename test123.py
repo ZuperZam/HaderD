@@ -49,15 +49,15 @@ model = keras.Sequential([
     keras.layers.Dense(128, activation=tf.nn.relu),
     keras.layers.Dense(10, activation=tf.nn.softmax)
 ])
-    
-model.compile(optimizer='Nadam',
+
+model.compile(optimizer=keras.optimizers.Nadam(lr=0.002, beta_1=0.9, beta_2=0.999, epsilon=None, schedule_decay=0.004),
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 
 model.fit(train_images, train_labels,
           batch_size=100,
           epochs=10,
-          verbose=0,
+          verbose=1,
           validation_data=(test_images, test_labels))
 
 test_loss, test_acc = model.evaluate(test_images, test_labels)
